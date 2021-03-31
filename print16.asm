@@ -2,7 +2,8 @@
 ; print16 从内存打印16位int(十进制5位),空位补0
 ; 以BE方式存储以便打印
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-.macro print16
+print16:
+.scope
 .data zp
 .space _num 6
 .text
@@ -16,8 +17,8 @@
     sta _num, x
     bne -
 
-	`splitbyte _1, 4
-	`splitbyte _1 + 1, 2
+	`splitbyte s, 4
+	`splitbyte s + 1, 2
     `carry
 	`print _num
 
@@ -29,9 +30,13 @@
 mod10:
     lda _num, y
     ldx #$ff
-*   inx
     clc
-    sbc #10
+*   inx
+    ;jsr printbyte
+    sbc #9
+    ;jsr printbyte
+    ;dey
+    ;rts
     bcc -
     clc
     adc #$3a
@@ -41,20 +46,22 @@ mod10:
     adc _num, y
     sta _num, y
     rts
-.macend
+.scend
 
 .macro splitbyte
 	lda _1
-    jsr printbyte
 	sta _num + _2
+    ;jsr printbyte
 	lsr
 	lsr
 	lsr
 	lsr
 	sta _num + _2 - 1
+    ;jsr printbyte
 	lda #$0f
-	ora _num + _2
+	and _num + _2
 	sta _num + _2
+    ;jsr printbyte
 .macend
 
 .macro carry
@@ -65,9 +72,13 @@ mod10:
 *   jsr mod10
     ; dey
     bne -
+    lda #$30
+    clc
+    adc _num
+    sta _num
     
     pla
     tay
 .macend
 
-.require "printbyte.asm"
+ .require "printbyte.asm"

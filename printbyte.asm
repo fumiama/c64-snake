@@ -2,6 +2,7 @@
 .space _na 1	; a的临时存放处
 .text
 printbyte:
+    pha
     sta _na
     txa
     pha
@@ -12,6 +13,9 @@ printbyte:
     jsr chrout	; putchar(a)
     dex			; x--
     bne -		; if(x != 0) goto 上个星号
+    lda #$20
+    jsr chrout
     pla
     tax
+    pla
     rts

@@ -2,7 +2,7 @@
 .require "platform/c64_0.oph"
 .require "platform/c64kernal.oph"
 
-.alias cblk $bf
+.alias cblk $a6
 
 .alias go_u $55	 ; 上
 .alias go_d $5f	 ; 下
@@ -30,9 +30,9 @@ main:
 .macro init
 	lda #147	 ;清屏
 	jsr chrout
-	lda #$aa
-	; sta s
-	sta s + 1
+	lda #$a8
+	sta s
+	;sta s + 1
 	jsr printscore
 .macend
 

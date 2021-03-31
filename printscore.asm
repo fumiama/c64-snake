@@ -9,7 +9,7 @@ printscore:
 	dex
 	bne -
 	`print score_str
-    `print16 s
+    jsr print16
 	ldx #15
 *	jsr chrout
 	dex
