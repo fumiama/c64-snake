@@ -29,25 +29,44 @@ print16:
 	pla
     rts
 
-mod10:
-    lda _num, y
-    cmp #10     ; 4位的数只有大于/小于10两种情况
-    bmi +       ; 小于等于10
-    adc #$25    ; 此时c=0
+_store:
+    adc _num_dec, y
     sta _num_dec, y
-    jsr printbyte
+    ;jsr printbyte
+    rts
+
+_store2:
+    adc _num_dec, y
+    sta _num_dec, y
+    ;jsr printbyte
     dey
     lda #1
-    adc _num_dec, y
     sta _num_dec, y
-    jsr printbyte
-    iny
-    jmp ++
-*   adc #$2f    ; 此时c=1
-    adc _num_dec, y
-    sta _num_dec, y
-*   rts
+    rts
+
+mod_4: `mod10 4, $26
+
+mod_3: `mod10 3, $2c
+
+mod_2: `mod10 2, $28
+
+mod_1: `mod10 1, $2a
 .scend
+
+.macro mod10
+    ldy #_1
+    lda _num, y
+    ;jsr printbyte
+    cmp #10
+    clc
+    bmi _s
+    adc #_2
+    jsr _store2
+    rts
+_s: adc #$30
+    jsr _store
+    rts
+.macend
 
 .macro splitbyte
 	lda _1
@@ -69,14 +88,14 @@ mod10:
     tya
     pha
 
-    ldy #4
-*   jsr mod10
-    dey
-    bne -
+    jsr mod_4
+    jsr mod_3
+    jsr mod_2
+    jsr mod_1
     lda #$30
     clc
-    adc _num
-    sta _num
+    adc _num_dec
+    sta _num_dec
     
     pla
     tay

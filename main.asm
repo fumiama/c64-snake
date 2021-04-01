@@ -30,7 +30,7 @@ main:
 .macro init
 	lda #147	 ;清屏
 	jsr chrout
-	lda #$ac
+	lda #$bd
 	sta s
 	lda #0
 	sta s + 1
