@@ -6,6 +6,7 @@ print16:
 .scope
 .data zp
 .space _num 6
+.space _num_dec 6
 .text
 	pha
 	txa
@@ -15,12 +16,13 @@ print16:
     ldx #6
 *   dex
     sta _num, x
+    sta _num_dec, x
     bne -
 
 	`splitbyte s, 4
 	`splitbyte s + 1, 2
     `carry
-	`print _num
+	`print _num_dec
 
 	pla
 	tax
@@ -29,23 +31,22 @@ print16:
 
 mod10:
     lda _num, y
-    ldx #$ff
-    clc
-*   inx
-    ;jsr printbyte
-    sbc #9
-    ;jsr printbyte
-    ;dey
-    ;rts
-    bcc -
-    clc
-    adc #$3a
-    sta _num, y
-    txa
+    cmp #10     ; 4位的数只有大于/小于10两种情况
+    bmi +       ; 小于等于10
+    adc #$25    ; 此时c=0
+    sta _num_dec, y
+    jsr printbyte
     dey
-    adc _num, y
-    sta _num, y
-    rts
+    lda #1
+    adc _num_dec, y
+    sta _num_dec, y
+    jsr printbyte
+    iny
+    jmp ++
+*   adc #$2f    ; 此时c=1
+    adc _num_dec, y
+    sta _num_dec, y
+*   rts
 .scend
 
 .macro splitbyte
@@ -70,7 +71,7 @@ mod10:
 
     ldy #4
 *   jsr mod10
-    ; dey
+    dey
     bne -
     lda #$30
     clc
