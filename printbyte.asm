@@ -2,6 +2,7 @@
 .space _na 1	; a的临时存放处
 .text
 printbyte:
+    php
     pha
     sta _na
     txa
@@ -18,4 +19,5 @@ printbyte:
     pla
     tax
     pla
+    plp
     rts
