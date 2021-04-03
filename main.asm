@@ -30,9 +30,9 @@ main:
 .macro init
 	lda #147	 ;清屏
 	jsr chrout
-	lda #$bd
+	lda #$cd
 	sta s
-	lda #0
+	lda #$ab
 	sta s + 1
 	jsr printscore
 .macend

@@ -13,9 +13,9 @@ print16:
 	pha
 	
     lda #0
-    ldx #10
-*   dex
-    sta _num - 1, x
+    ldx #6
+*   sta _num_dec - 1, x
+    dex
     bne -
 
 	`splitbyte s, 3
@@ -33,6 +33,7 @@ print16:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 mod_4:      ; 高字节低4位若大于10，则向高位进1
+    ;jsr chrin
     lda _num + 3
     cmp #10
     bcc +
@@ -40,8 +41,10 @@ mod_4:      ; 高字节低4位若大于10，则向高位进1
     tax
     lda #1
     sta _num_dec + 3    ; 进位
+    ;jsr chrin
     txa
 *   sta _num_dec + 4
+    ;jsr chrin
     rts
 
 mod_3:      ; 高字节高4位的值相当于个位加6，十位加1
@@ -91,12 +94,13 @@ mod_1:      ; 低字节低4位的值相当于个位加6，十位加9，百位加
     adc _num_dec + _1
     bcc _skip
     pha
+    lda #$10                ; 进位相当于100
     adc _num_dec + _1 - 1
     sta _num_dec + _1 - 1
     pla
 _skip:
     sta _num_dec + _1
-    ;jsr printbyte
+    ;jsr chrin
 .macend
 
 .macro splitbyte
@@ -124,26 +128,28 @@ _skip:
     jsr mod_3
     jsr mod_2
     jsr mod_1   ; 此时结果中有些位可能大于10，需要进行进位处理
-    ldx #4
+    jsr chrin
+    ldx #6
 _loop:
-    lda _num_dec, x
+    lda _num_dec - 1, x
     ldy #0      ; y记录进位数
     cmp #10
     bcc _skip   ; 小于10不进位
     pha
-    ora #$f0
+    and #$f0
     ror
     ror
     ror
     ror
     tay
     pla
-    ora #$0f
-    sta _num_dec, x
+    and #$0f
+    adc _num_dec - 1, x
+    sta _num_dec - 1, x
     tya
     dex
-    adc _num_dec, x
-    sta _num_dec, x
+    adc _num_dec - 1, x
+    sta _num_dec - 1, x
     inx
 _skip:
     dex
@@ -155,6 +161,7 @@ _skip:
 _up:
     adc _num_dec - 1, x
     sta _num_dec - 1, x
+    jsr chrin
     dex
     bne _up
 
