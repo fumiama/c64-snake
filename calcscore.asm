@@ -3,6 +3,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 calcscore:
 .scope
-    inc s
-    rts
+	inc s
+	rts
 .scend
