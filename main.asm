@@ -70,4 +70,4 @@ main:
 .data zp		; 零页段边界
 .checkpc $80
 .data
-.checkpc $D000	; data段边界
+.checkpc $0800	; data段边界
