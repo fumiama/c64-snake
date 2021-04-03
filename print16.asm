@@ -14,7 +14,7 @@ print16:
 	
     lda #0
     ldx #6
-*   sta _num_dec - 1, x
+*   sta _num_dec, x
     dex
     bne -
 
@@ -95,6 +95,7 @@ mod_1:      ; 低字节低4位的值相当于个位加6，十位加9，百位加
     bcc _skip
     pha
     lda #$10                ; 进位相当于100
+    clc
     adc _num_dec + _1 - 1
     sta _num_dec + _1 - 1
     pla
@@ -129,39 +130,40 @@ _skip:
     jsr mod_2
     jsr mod_1   ; 此时结果中有些位可能大于10，需要进行进位处理
     jsr chrin
-    ldx #6
+    ldx #5
 _loop:
-    lda _num_dec - 1, x
     ldy #0      ; y记录进位数
+    lda _num_dec, x
     cmp #10
     bcc _skip   ; 小于10不进位
+    jsr printbyte
     pha
     and #$f0
-    ror
-    ror
-    ror
-    ror
+    lsr
+    lsr
+    lsr
+    lsr
     tay
     pla
     and #$0f
-    adc _num_dec - 1, x
-    sta _num_dec - 1, x
+    jsr printbyte
+    adc _num_dec, x
+    sta _num_dec, x
+    jsr chrin
     tya
-    dex
     adc _num_dec - 1, x
     sta _num_dec - 1, x
-    inx
+    jsr chrin
 _skip:
     dex
     bne _loop
 
     cld         ; 退出bcd模式
-    lda #$30    ; 转化为可显示字符
     ldx #5
 _up:
-    adc _num_dec - 1, x
+    lda _num_dec - 1, x
+    ora #$30    ; 转化为可显示字符
     sta _num_dec - 1, x
-    jsr chrin
     dex
     bne _up
 
