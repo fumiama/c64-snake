@@ -3,16 +3,16 @@
 .require "platform/c64kernal.oph"
 
 main:
-*   jsr getin
-    beq skip
-    cmp #'@
-    beq end
-    jsr printbyte
-    lda #13		; 换行
-    jsr chrout
+*	jsr getin
+	beq skip
+	cmp #'@
+	beq end
+	jsr printbyte
+	lda #13		; 换行
+	jsr chrout
 skip:
-    jmp -
+	jmp -
 end:
-    rts
+	rts
 
 .require "printbyte.asm"
