@@ -14,7 +14,7 @@ print16:
 	
     lda #0
     ldx #6
-*   sta _num_dec, x
+*   sta _num_dec-1, x
     dex
     bne -
 
@@ -129,31 +129,24 @@ _skip:
     jsr mod_3
     jsr mod_2
     jsr mod_1   ; 此时结果中有些位可能大于10，需要进行进位处理
-    jsr chrin
     ldx #5
 _loop:
     ldy #0      ; y记录进位数
-    lda _num_dec, x
+    txa
+    lda _num_dec-1, x
     cmp #10
     bcc _skip   ; 小于10不进位
-    jsr printbyte
     pha
     and #$f0
     lsr
     lsr
     lsr
     lsr
-    tay
+    adc _num_dec-2, x
+    sta _num_dec-2, x
     pla
     and #$0f
-    jsr printbyte
-    adc _num_dec, x
-    sta _num_dec, x
-    jsr chrin
-    tya
-    adc _num_dec - 1, x
-    sta _num_dec - 1, x
-    jsr chrin
+    sta _num_dec-1, x
 _skip:
     dex
     bne _loop
@@ -171,4 +164,4 @@ _up:
     tay
 .macend
 
- .require "printbyte.asm"
+; .require "printbyte.asm"
