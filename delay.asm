@@ -1,7 +1,7 @@
 ; DELAY routine.  Takes values from the Accumulator and pauses
 ; for that many jiffies (1/60th of a second).
 .scope
-.data zp
+.data
 .space _tmp 1
 .space _target 1
 .text

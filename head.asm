@@ -17,10 +17,11 @@
 .space d 1			; 方向 值定义如上
 .space c 1			; 🐍长度 最大255 最小0
 .space s 2			; 得分 小端序
+.space _ptr 2       ; 通用指针
+
+.alias title $0400
+.alias field $0428  ; 蛇所在屏幕内存区
 
 .data
-.org $0400
-.space title 40
-.space field 960	; 蛇所在屏幕内存区
-
+.org $c000	
 .text

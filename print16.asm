@@ -4,7 +4,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 print16:
 .scope
-.data zp
+.data
 .space _num 4
 .space _num_dec 6
 .text

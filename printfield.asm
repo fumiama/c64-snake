@@ -3,9 +3,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 printfield:
 .scope
-.data zp
-.space _ptr 2
-.text
 	ldx #23			; i代表行数，不含边框
 	lda #<field		; 取地址低8位
 	sta _ptr
