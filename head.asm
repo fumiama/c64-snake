@@ -1,6 +1,7 @@
 .alias cblk $66		; 边框
 .alias csnk $a0		; 像素
 .alias csps $20		; 空白
+.alias crnd $51     ; 食物
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; 按钮配置，调试时使用WASD控制
@@ -23,5 +24,6 @@
 .alias field $0428  ; 蛇所在屏幕内存区
 
 .data
-.org $c000	
+.org $c000
+.space eat 1
 .text

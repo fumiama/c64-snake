@@ -52,7 +52,9 @@ addfood:
 	beq -
 	cmp #cblk
 	beq -
-	lda #csnk
+	cmp #crnd
+	beq -
+	lda #crnd
 	dey
 	sta (_ptr), y
 	rts

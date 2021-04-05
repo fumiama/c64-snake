@@ -5,9 +5,6 @@
 
 main:
 .scope
-.data
-.space lopcnt 1		; 循环次数计数
-.text
 	`init
 	jsr getchar		; 等待输入任意字符开始游戏
 	jsr erasehint	; 游戏开始，清空提示
@@ -18,28 +15,24 @@ main:
 	jsr printfail
 	jsr getchar
 	rts
-	clc
-*	jsr judgefood	; 判断是否吃到食物
+*	clc
+	lda #0
+	sta eat
+	jsr judgefood	; 判断是否吃到食物
 	bcc +
-	jsr append
+	inc c	; 蛇长加一
+	lda #1
+	sta eat
+	jsr addfood
 *	jsr calcscore	; 计算得分
 	jsr printscore	; 打印分数
 	lda #32
 	jsr delay		; 延时期间最后一个按键位于d
 	lda d
-	beq ++
 	cmp #ed_g
 	bne +
 	rts
-*	sta d
-*	inc lopcnt
-	lda lopcnt
-	cmp #16
-	bmi -----
-	lda #0
-	sta lopcnt
-	jsr addfood
-	jmp -----
+*	jmp ----
 .scend
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -50,7 +43,7 @@ main:
 	jsr chrout
 	lda #$00
 	sta s
-	lda #$00
+	sta eat
 	sta s + 1		; 初始化分数为0
 	jsr printscore	; 打印分数
 	lda #csnk
@@ -69,7 +62,6 @@ main:
 .require "hint.asm"
 .require "getchar.asm"
 .require "addfood.asm"
-.require "append.asm"
 .require "delay.asm"
 .require "judge.asm"
 .require "move.asm"
