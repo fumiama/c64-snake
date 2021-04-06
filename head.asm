@@ -19,11 +19,12 @@
 .space c 1			; 🐍长度 最大255 最小0
 .space s 2			; 得分 小端序
 .space _ptr 2       ; 通用指针
+.space eat 1        ; 吃到食物标记
+.space shead 2      ; 蛇头指针
 
 .alias title $0400
 .alias field $0428  ; 蛇所在屏幕内存区
 
 .data
 .org $c000
-.space eat 1
 .text

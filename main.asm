@@ -8,8 +8,7 @@ main:
 	`init
 	jsr getchar		; 等待输入任意字符开始游戏
 	jsr erasehint	; 游戏开始，清空提示
-*	jsr move		; 蛇移动一格
-	clc
+*	clc
 	jsr judgeout	; 判断是否出界
 	bcc +
 	jsr printfail
@@ -24,7 +23,8 @@ main:
 	lda #1
 	sta eat
 	jsr addfood
-*	jsr calcscore	; 计算得分
+*	jsr move		; 蛇移动一格
+	jsr calcscore	; 计算得分
 	jsr printscore	; 打印分数
 	lda #32
 	jsr delay		; 延时期间最后一个按键位于d
@@ -54,6 +54,7 @@ main:
 	lda #go_d		; 初始化方向为下
 	sta d
 	jsr srand		; 初始化随机数种子
+	jsr addfood		; 增加食物
 .macend
 
 .require "printscore.asm"
