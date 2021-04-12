@@ -3,6 +3,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 move:
 .scope
-;testrrr999www11111
+;test
 	rts
 .scend
