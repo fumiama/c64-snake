@@ -13,9 +13,6 @@
 ; PRINTSTR routine.  Accumulator stores the low byte of the address,
 ; X register stores the high byte.
 .scope
-.data zp
-.space _ptr 2
-.text
 printstr:
 	sta _ptr
 	sty _ptr+1
