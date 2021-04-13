@@ -21,4 +21,4 @@ printscore:
 	rts
 .scend
 
-score_str: .byte "SCORE",0
+score_str: .byte "SNAKE",0
