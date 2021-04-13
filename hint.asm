@@ -13,7 +13,7 @@ printfail:
 	`print failhint
 	rts
 erasehint:
-	ldy #25
+	ldy #22
 	lda #csps
 *	sta [title+20*40+8-1], y
 	dey

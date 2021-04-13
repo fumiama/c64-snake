@@ -24,75 +24,13 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 judgeout:
-.scope
-	lda d
-	;;方向向上
-	cmp #go_u
-	beq _gup
-	;;方向向下
-	cmp #go_d
-	beq _gdown
-	;;方向向左
-	cmp #go_l
-	beq _gleft
-	;;方向向右
-	cmp #go_r
-	beq _gright
-	jmp _End1 				;什么都没有撞
+	`judgeof cblk
+	bcs +
+	cmp #csnk
+	bne +
+	sec
+*	rts
 
-;是否撞墙；是否考虑溢出情况；撞墙撞自己要不要分开写？
-_gup:	 				;地址-40?实现：/减法/地址跳跃
-		lda shead
-		sec
-		sbc #40 
-		sta _ptr
-		lda shead+1
-		sbc #0
-		sta _ptr+1
-		ldy #0
-		lda (_ptr),y
-
-	 	cmp #cblk
-		beq _End2 
-	 	jmp _selfx
-
-_gdown: ldy #40	   			;地址+40,好像有问题，这个(shead)是蛇头地址的地址了 拟修改:lda (取低位用啥来着)(shead),sec,  adc #40,  
-		lda (shead),y
-	    cmp #cblk
-	    beq _End2
-	    jmp _selfx
-
-_gleft: 
-		lda shead
-		sec
-		sbc #1 
-		sta _ptr
-		lda shead+1
-		sbc #0
-		sta _ptr+1
-		ldy #0
-		lda (_ptr),y
-
-	    cmp #cblk
-	    beq _End2
-	    jmp _selfx
-
-_gright:ldy #1				;地址+1，好像有问题，这个(shead) 拟修改:lda (取低位用啥来着)(shead),sec,adc # 
-		lda (shead),y
-		cmp #cblk
-		beq _End2
-
-_selfx: cmp #csnk
-		beq _End2
-
-;蛇没死
-_End1:  clc
-		rts
-;蛇死了
-_End2:  sec
-		rts
-
-.scend
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; judgefood 判断是否吃到食物
 ; 是->sec 即进位标志置1
@@ -104,8 +42,17 @@ _End2:  sec
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 judgefood:
-.scope
+	`judgeof crnd
+	rts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; judgeof 两个判断的宏
+; 是->sec 即进位标志置1
+; 否->clc 即进位标志置0
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+.macro judgeof
 	lda d
+	ldy #0
 	;;方向向上
 	cmp #go_u
 	beq _gup
@@ -121,54 +68,43 @@ judgefood:
 	jmp _End1 				;输入了一个无效字符，，，，，？
 
 ;是否撞墙；是否考虑溢出情况-不用；撞墙撞自己要不要分开写？
-_gup:	
-	    lda shead
-		sec 
-	    sbc #40
-		sta _ptr
-		lda shead+1
-		sbc #0
-		sta _ptr+1
-		ldy #0
+_gup:
+	    `_m_ptr_minus 40
 		lda (_ptr),y
+		jmp _compare
 
-		cmp #crnd
-	    beq _End2
-	    bne _End1
-
-_gdown: ldy #40	   			;地址+40
+_gdown:
+		ldy #40	   			;地址+40
 	    lda (shead),y
-	    cmp #crnd
-	    beq _End2
-	    bne _End1
+	    jmp _compare
 
-_gleft: 
-
-	    lda shead
-		sec 
-	    sbc #1
-		sta _ptr
-		lda shead+1
-		sbc #0
-		sta _ptr+1
-		ldy #0
+_gleft:
+	    `_m_ptr_minus 1
 		lda (_ptr),y
+		jmp _compare
 
-		cmp #crnd
-	    beq _End2
-	    bne _End1
-
-_gright:ldy #1				;地址+1
+_gright:
+		ldy #1				;地址+1
 		lda (shead),y
-		cmp #crnd
+
+_compare:
+		cmp #_1
 		beq _End2
 
-;没吃到
+;没吃到 默认情况
 _End1:  clc
-		rts
+		jmp _end
 ;吃到了
 _End2:  sec
-		rts
+_end:
+.macend
 
-
-.scend
+.macro _m_ptr_minus
+	lda shead
+	sec
+	sbc #_1
+	sta _ptr
+	lda shead+1
+	sbc #0
+	sta _ptr+1
+.macend

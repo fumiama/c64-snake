@@ -48,14 +48,9 @@ addfood:
 	tay
 *	lda (_ptr), y
 	iny
-	cmp #csnk
-	beq -
-	cmp #cblk
-	beq -
-	cmp #crnd
-	beq -
+	cmp #csps
+	bne -
 	lda #crnd
-	dey
 	sta (_ptr), y
 	rts
 .scend

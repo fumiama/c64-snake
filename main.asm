@@ -19,20 +19,27 @@ main:
 	sta eat
 	jsr judgefood	; 判断是否吃到食物
 	bcc +
-	inc c	; 蛇长加一
 	lda #1
 	sta eat
 	jsr addfood
 *	jsr move		; 蛇移动一格
 	jsr calcscore	; 计算得分
 	jsr printscore	; 打印分数
+	lda d
+	sta prev_d		; 备份前一个按键
 	lda #32
 	jsr delay		; 延时期间最后一个按键位于d
 	lda d
 	cmp #ed_g
-	bne +
+	beq _end
+	cmp #st_g
+	bne ---
+	jsr getchar
+	lda prev_d
+	sta d			; 恢复按键
+	jmp ---
+_end:
 	rts
-*	jmp ----
 .scend
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47,8 +54,6 @@ main:
 	sta s + 1		; 初始化分数为0
 	jsr printscore	; 打印分数
 	jsr move_init
-	lda #2
-	sta c			; 初始化蛇长为1
 	jsr printfield	; 打印蛇，包括边框
 	jsr printhint	; 打印开始提示
 	lda #go_d		; 初始化方向为下
