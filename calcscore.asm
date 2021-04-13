@@ -4,5 +4,7 @@
 calcscore:
 .scope
 	inc s
-	rts
+	bne +
+	inc s+1
+*	rts
 .scend
