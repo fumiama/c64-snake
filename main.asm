@@ -46,13 +46,8 @@ main:
 	sta eat
 	sta s + 1		; 初始化分数为0
 	jsr printscore	; 打印分数
-	lda #csnk
-	sta field + 11*40 + 19	; 初始化蛇位置
-	lda #<[field + 11*40 + 19]
-	ldx #>[field + 11*40 + 19]
-	sta shead
-	stx shead+1
-	lda #1
+	jsr move_init
+	lda #2
 	sta c			; 初始化蛇长为1
 	jsr printfield	; 打印蛇，包括边框
 	jsr printhint	; 打印开始提示
