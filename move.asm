@@ -21,12 +21,16 @@ move:
 	bne +
 	lda #40
 	jsr _propergate_tail
+	jsr _head_move
+	rts
 *	ldy #1
 	lda (_stail),y
 	cmp #csnk			;right search
 	bne +
 	lda #1
 	jsr _propergate_tail
+	jsr _head_move
+	rts
 *	jsr _copy_to_ptr
 	lda #40
 	sta _tmp
@@ -36,6 +40,8 @@ move:
 	cmp #csnk			;up search
 	bne +
 	jsr _copy_to_tail
+	jsr _head_move
+	rts
 *	jsr _copy_to_ptr
 	lda #1
 	sta _tmp
@@ -44,11 +50,14 @@ move:
 	cmp #csnk			;left search
 	bne _head_move
 	jsr _copy_to_tail
+	jsr _head_move
+	rts
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ; head move
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 _head_move:
 	;lda #go_l			;测试用
+	ldy #0
 	`_m_judge_dir_head go_d, 40, _propergate_head
 	`_m_judge_dir_head go_r,  1, _propergate_head
 	`_m_judge_dir_head go_l,  1, _borrow_head
