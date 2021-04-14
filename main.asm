@@ -26,7 +26,7 @@ main:
 *	jsr move		; 蛇移动一格
 	jsr calcscore	; 计算得分
 	jsr printscore	; 打印分数
-	lda #32
+	lda #20
 	jsr delay		; 延时期间最后一个按键位于d
 	lda d
 	cmp #ed_g
