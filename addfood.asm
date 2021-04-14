@@ -46,8 +46,8 @@ addfood:
 	bmi +
 	sbc #$c0
 	tay
-*	lda (_ptr), y
-	iny
+*	iny
+	lda (_ptr), y
 	cmp #csps
 	bne -
 	lda #crnd

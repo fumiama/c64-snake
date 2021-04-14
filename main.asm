@@ -27,7 +27,7 @@ main:
 	jsr printscore	; 打印分数
 	lda d
 	sta prev_d		; 备份前一个按键
-	lda #32
+	lda #20
 	jsr delay		; 延时期间最后一个按键位于d
 	lda d
 	cmp #ed_g
